@@ -21,6 +21,7 @@ public class MongoDBController {
     }
 
     public void createBase(ArrayList<Record> articles) {
+    	this.database.drop();
         MongoCollection<Document> mongoCollection = database.getCollection("index");
         for (Record r : articles) {
             int id = r.get("id").asInt();

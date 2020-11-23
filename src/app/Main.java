@@ -10,19 +10,22 @@ public class Main {
 
     static Scanner sc = new Scanner(System.in);
     static ArrayList<Integer> listeIds;
-    static ArrayList<String> listeTitre;
+    static ArrayList<String> listeTitres;
     
 	static Neo4JController neo4J = new Neo4JController();
     static MongoDBController mongoDB = new MongoDBController();
         
     
     public static void main(String[] args) {
+    	System.out.println("Veuillez attendre quelques secondes...");
     	mongoDB.createBase(neo4J.getArticles());
+    	System.out.println("Veuillez attendre quelques secondes...");
     	mongoDB.createStructureMiroir();
 		displayMenu();
 	}
 
 	private static void displayMenu() {
+		System.out.println();
 		System.out.println("---------- MONGO & NEO4J APP ----------");
 		System.out.println("1 - Rechercher un titre de document à partir d'un mot clé");
 		System.out.println("2 - Afficher les auteurs ayant écrit le plus d'articles");
@@ -31,13 +34,16 @@ public class Main {
 		System.out.println("-------------------------------");
 		switch(sc.nextInt()) {
 		case 1 :
-			rechercherDocMotCleUnique();
+			rechercherDocsMotCleUnique();
+			displayMenu();
 			break;
 		case 2 :
 			afficherAuteurs();
+			displayMenu();
 			break;
 		case 3 :
-			rechercherDocMotsClesMultiples();
+			rechercherDocsMotsClesMultiples();
+			displayMenu();
 			break;
 		case 0 :
 			System.out.println("Bye bye");
@@ -51,13 +57,13 @@ public class Main {
 		}
 	}
 
-	private static void rechercherDocMotsClesMultiples() {
+	private static void rechercherDocsMotCleUnique() {
         System.out.println("Entrez le mot clé : ");
-        String motCle = sc.nextLine();
+        String motCle = sc.next();
         listeIds = mongoDB.rechercheMotUnique(motCle);
         if (!listeIds.isEmpty()) {
-        	listeTitre = neo4J.getTitresByIds(listeIds);
-            for (String s : listeTitre)
+        	listeTitres = neo4J.getTitresByIds(listeIds);
+            for (String s : listeTitres)
                 System.out.println(s);
 
         } else {
@@ -72,14 +78,15 @@ public class Main {
         }	
 	}
 
-	private static void rechercherDocMotCleUnique() {
-        System.out.println("Entrez la liste des mots-clés, séparés par une virgule ',' : ");
-        String motsClesInput = sc.nextLine();
-        String[] motsCles = motsClesInput.split(",");
+	private static void rechercherDocsMotsClesMultiples() {
+		Scanner newSc = new Scanner(System.in).useDelimiter("\n");
+        System.out.println("Entrez la liste des mots-clés, séparés par un point-virgule ';' (sans espace) : ");
+        String motsClesInput = newSc.nextLine();
+        String[] motsCles = motsClesInput.split(";");
         listeIds = mongoDB.rechercheMotsMultiples(motsCles);
         if (!listeIds.isEmpty()) {
-        	listeTitre = neo4J.getTitresByIds(listeIds);
-            for (String s : listeTitre) {
+        	listeTitres = neo4J.getTitresByIds(listeIds);
+            for (String s : listeTitres) {
             	System.out.println(s);
             }     
         } else {
