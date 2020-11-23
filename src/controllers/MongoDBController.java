@@ -53,7 +53,6 @@ public class MongoDBController {
                 } else {
                     BasicBSONList list = new BasicBSONList();
                     list.put(0, d.get("idDocument"));
-
                     indexInverse.insertOne(
                             new Document("mot", s)
                                     .append("documents", list)
@@ -65,7 +64,7 @@ public class MongoDBController {
     }
 
     @SuppressWarnings("unchecked")
-	public ArrayList<Integer> searchByWord(String word) {
+	public ArrayList<Integer> rechercheMotUnique(String word) {
         MongoCollection<Document> indexInverse = database.getCollection("indexInverse");
         Document document = indexInverse.find(Filters.eq("mot", word)).first();
         if (null != document)
@@ -75,7 +74,7 @@ public class MongoDBController {
     }
 
     @SuppressWarnings("unchecked")
-	public ArrayList<Integer> searchByWordList(String[] words) {
+	public ArrayList<Integer> rechercheMotsMultiples(String[] words) {
         MongoCollection<Document> indexInverse = database.getCollection("indexInverse");
         AggregateIterable<Document> result = indexInverse.aggregate(Collections.singletonList(
                 Aggregates.match(Filters.in("mot", words))));

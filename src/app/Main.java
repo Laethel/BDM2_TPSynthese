@@ -53,10 +53,10 @@ public class Main {
 
 	private static void rechercherDocMotsClesMultiples() {
         System.out.println("Entrez le mot clé : ");
-        String keyword = sc.nextLine();
-        listeIds = mongoDB.searchByWord(keyword);
+        String motCle = sc.nextLine();
+        listeIds = mongoDB.rechercheMotUnique(motCle);
         if (!listeIds.isEmpty()) {
-        	listeTitre = neo4J.getArticlesTitleByDocumentIdList(listeIds);
+        	listeTitre = neo4J.getTitresByIds(listeIds);
             for (String s : listeTitre)
                 System.out.println(s);
 
@@ -74,11 +74,11 @@ public class Main {
 
 	private static void rechercherDocMotCleUnique() {
         System.out.println("Entrez la liste des mots-clés, séparés par une virgule ',' : ");
-        String rawKeywords = sc.nextLine();
-        String[] keywords = rawKeywords.split(",");
-        listeIds = mongoDB.searchByWordList(keywords);
+        String motsClesInput = sc.nextLine();
+        String[] motsCles = motsClesInput.split(",");
+        listeIds = mongoDB.rechercheMotsMultiples(motsCles);
         if (!listeIds.isEmpty()) {
-        	listeTitre = neo4J.getArticlesTitleByDocumentIdList(listeIds);
+        	listeTitre = neo4J.getTitresByIds(listeIds);
             for (String s : listeTitre) {
             	System.out.println(s);
             }     

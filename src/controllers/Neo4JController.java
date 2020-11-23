@@ -23,7 +23,7 @@ public class Neo4JController {
         return driver.session();
     }
 
-    public ArrayList<String> getArticlesTitleByDocumentIdList(ArrayList<Integer> docId) {
+    public ArrayList<String> getTitresByIds(ArrayList<Integer> docId) {
         StringBuilder docIdList = new StringBuilder("[");
         for (int id: docId) {
             docIdList.append(id).append(",");
